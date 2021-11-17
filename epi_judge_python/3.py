@@ -1,24 +1,23 @@
 from typing import List
 
-def generate_balanced_parentheses(num_pairs: int) -> List[str]:
+
+
+def gray_code(num_bits: int) -> List[int]:
     # TODO - you fill in here.
     # return []
 
-    def backtracking(i, parens):
-        if len(parens) == 2*num_pairs:
-            if parens.count('(') == len(parens) // 2:
-                result.append(parens)
-            return
-        for p in bracket:
-            if p == '(':
-                backtracking(i+1, parens+'(')
-            elif p == ')' and parens.count(')') < len(parens) - parens.count(')'):
-                backtracking(i+1, parens+')')
+    def backtracking(i, val, code_list):
+        if i == 2**num_bits-1:
+            return code_list.copy()
+        for j in range(num_bits):
+            # toggle ith bit
+            new_val = val ^ (1 << j)
+            if new_val not in code_list:
+                res = backtracking(i+1, new_val, code_list+[new_val])
+                if res:
+                    break
+        return res
+    res = backtracking(0, 0, [0])
+    return res
 
-    result = []
-    bracket = ['(', ')']
-    backtracking(0, '')
-    return result
-
-
-print(generate_balanced_parentheses(3))
+print(gray_code(1))

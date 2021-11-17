@@ -8,7 +8,30 @@ from test_framework.test_utils import enable_executor_hook
 
 def gray_code(num_bits: int) -> List[int]:
     # TODO - you fill in here.
-    return []
+    # return []
+
+    def backtracking(i, val, code_list):
+        if i == 2**num_bits-1:
+            return code_list.copy()
+        for j in range(num_bits):
+            # toggle ith bit
+            new_val = val ^ (1 << j)
+            if new_val not in code_list:
+                res = backtracking(i+1, new_val, code_list+[new_val])
+                if res:
+                    break
+        return res
+    res = backtracking(0, 0, [0])
+    return res
+
+
+def differ_by_1_bit(a, b):
+    x = a ^ b
+    if x == 0:
+        return False
+    while x & 1 == 0:
+        x >>= 1
+    return x == 1
 
 
 @enable_executor_hook

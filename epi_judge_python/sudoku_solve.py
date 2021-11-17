@@ -11,7 +11,65 @@ from test_framework.test_utils import enable_executor_hook
 
 def solve_sudoku(partial_assignment: List[List[int]]) -> bool:
     # TODO - you fill in here.
-    return
+    # return
+
+    def satisfied_num(i, j):
+        nums = list(range(1, 10))
+        for k in range(9):
+            val = partial_assignment[i][k]
+            if val and val in nums:
+                nums.remove(val)
+        for k in range(9):
+            val = partial_assignment[k][j]
+            if val and val in nums:
+                nums.remove(val)
+        base_r, base_c = i//3 , j//3
+        for r in range(3):
+            for c in range(3):
+                val = partial_assignment[base_r*3+r][base_c*3+c]
+                if val and val in nums:
+                    nums.remove(val)
+        return nums
+
+    def next_pos(i, j):
+        if j == 8:
+            i += 1
+            j = 0
+        else:
+            j += 1
+        return i, j
+
+    def start_index(partial_assignment):
+        i, j = 0, 0
+        while partial_assignment[i][j] != 0:
+            if j == 8:
+                i += 1
+                j = 0
+            else:
+                j += 1
+        return i, j
+
+    def backtracking(i, j):
+        find = False
+        if i == 9 and j == 0:
+            find = True
+            return find
+        if partial_assignment[i][j] == 0:
+            s = satisfied_num(i, j)
+            for e in s:
+                partial_assignment[i][j] = e
+                new_i, new_j = next_pos(i, j)
+                find = backtracking(new_i, new_j)
+                if find:
+                    break
+                partial_assignment[i][j] = 0
+        else:
+            new_i, new_j = next_pos(i, j)
+            find = backtracking(new_i, new_j)
+        return find
+    start_i, start_j = start_index(partial_assignment)
+    return backtracking(start_i, start_j)
+
 
 
 def assert_unique_seq(seq):
